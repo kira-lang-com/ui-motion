@@ -1,0 +1,7 @@
+.kira-build/
+generated/
+.DS_Store
+kira.lock
+exports/
+Bindings/
+**/app/bindings/

@@ -1,0 +1,13 @@
+Package KiraUIMotion {
+    let version = "0.1.0"
+    let kira = "0.1.0"
+    let kind = PackageKind.Library
+    let moduleRoot = "KiraUIMotion"
+    let defaults = Defaults { executionMode: Backend.Llvm, buildTarget: BuildTarget.Host }
+    // Motion is the time domain and nothing else: numbers that describe where a
+    // value is on its way to somewhere. It draws nothing, so it depends on
+    // nothing that draws — which is what lets KiraUIFoundation's own scrolling
+    // be built on it without a cycle, and what lets a spring be tested with no
+    // window open.
+    let dependencies = []
+}
