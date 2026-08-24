@@ -59,7 +59,7 @@ function mtSpringPeak(spring: MotionSpring, from: Float, seconds: Float) -> Floa
 
 // A critically damped spring arrives and stops. Two digits of the target after
 // a second is the whole claim: it got there.
-Test MtCriticallyDampedArrives {
+construct MtCriticallyDampedArrives() extends Test {
     test {
         let spring = MotionSpring { response: 0.4, damping: 1.0, target: 100.0 }
         return mtScaled(mtRunSpring(move spring, 0.0, 0.0, 1.5, 120.0), 2)
@@ -69,7 +69,7 @@ Test MtCriticallyDampedArrives {
 
 // And never passes it. This is what damping 1.0 BUYS, and the reason a panel
 // being placed uses it: the peak is the target, not beyond it.
-Test MtCriticallyDampedNeverOvershoots {
+construct MtCriticallyDampedNeverOvershoots() extends Test {
     test {
         let spring = MotionSpring { response: 0.4, damping: 1.0, target: 100.0 }
         let peak = mtSpringPeak(move spring, 0.0, 2.0)
@@ -82,7 +82,7 @@ Test MtCriticallyDampedNeverOvershoots {
 }
 
 // An underdamped one does pass it — that is what bounce means — and comes back.
-Test MtUnderdampedOvershootsThenSettles {
+construct MtUnderdampedOvershootsThenSettles() extends Test {
     test {
         let bouncy = MotionSpring { response: 0.5, damping: 0.7, target: 100.0 }
         let peak = mtSpringPeak(move bouncy, 0.0, 3.0)
@@ -97,7 +97,7 @@ Test MtUnderdampedOvershootsThenSettles {
 
 // The overdamped branch is a different solution entirely — two real exponentials
 // rather than a decaying sine — and it still has to arrive.
-Test MtOverdampedArrives {
+construct MtOverdampedArrives() extends Test {
     test {
         let spring = MotionSpring { response: 0.4, damping: 2.5, target: 100.0 }
         return mtScaled(mtRunSpring(move spring, 0.0, 0.0, 3.0, 120.0), 1)
@@ -109,7 +109,7 @@ Test MtOverdampedArrives {
 // same spring at 60Hz and at 240Hz is in the SAME PLACE at the same moment. A
 // stepped integrator disagrees between the two, and by more when frames are
 // dropped.
-Test MtSpringIsFrameRateIndependent {
+construct MtSpringIsFrameRateIndependent() extends Test {
     test {
         let slow = mtRunSpring(MotionSpring { response: 0.5, damping: 0.7, target: 100.0 }, 0.0, 0.0, 0.6, 60.0)
         let fast = mtRunSpring(MotionSpring { response: 0.5, damping: 0.7, target: 100.0 }, 0.0, 0.0, 0.6, 240.0)
@@ -122,7 +122,7 @@ Test MtSpringIsFrameRateIndependent {
 // target is set is the value the instant before it. A spring restarted from
 // rest would jump here, and that jump is the hitch this whole design exists to
 // avoid.
-Test MtRetargetIsContinuous {
+construct MtRetargetIsContinuous() extends Test {
     test {
         var state = motionSpringStart(MotionSpring { response: 0.5, damping: 0.7, target: 100.0 }, 0.0, 0.0)
         var elapsed = 0.0
@@ -140,7 +140,7 @@ Test MtRetargetIsContinuous {
 
 // A release hands its velocity over, so a spring thrown toward its target gets
 // there sooner than one that starts still.
-Test MtInitialVelocityIsCarried {
+construct MtInitialVelocityIsCarried() extends Test {
     test {
         let thrown = mtRunSpring(MotionSpring { response: 0.5, damping: 1.0, target: 100.0 }, 0.0, 300.0, 0.15, 240.0)
         let still = mtRunSpring(MotionSpring { response: 0.5, damping: 1.0, target: 100.0 }, 0.0, 0.0, 0.15, 240.0)
@@ -153,7 +153,7 @@ Test MtInitialVelocityIsCarried {
 }
 
 // The two spellings of one spring describe the same oscillator.
-Test MtCoefficientsRoundTrip {
+construct MtCoefficientsRoundTrip() extends Test {
     test {
         let original = MotionSpring { response: 0.5, damping: 0.7, target: 0.0 }
         let stiffness = motionSpringStiffness(original)
@@ -165,7 +165,7 @@ Test MtCoefficientsRoundTrip {
 }
 
 // Reduced motion takes the elastic out: the same named curve stops overshooting.
-Test MtReducedMotionRemovesOvershoot {
+construct MtReducedMotionRemovesOvershoot() extends Test {
     test {
         let plain = motionCurveFor(.Bouncy, 100.0, false)
         let reduced = motionCurveFor(.Bouncy, 100.0, true)
@@ -185,18 +185,18 @@ Test MtReducedMotionRemovesOvershoot {
 // a 960-point dimension gives about 2.74, and pulling the whole 960 gives about
 // 340.65. These are the assertion because they are what the shipping system
 // does — a curve that merely looked similar would miss them.
-Test MtRubberBandMatchesThePlatformCurve {
+construct MtRubberBandMatchesThePlatformCurve() extends Test {
     test { return mtScaled(motionRubberBand(5.0, 960.0, 0.55), 2) }
     expect { let e: Result<Int, TestFailure> = .Ok(274); return e }
 }
 
-Test MtRubberBandResistsAFullPull {
+construct MtRubberBandResistsAFullPull() extends Test {
     test { return mtScaled(motionRubberBand(960.0, 960.0, 0.55), 2) }
     expect { let e: Result<Int, TestFailure> = .Ok(34065); return e }
 }
 
 // Resistance always gives less than was asked for, and never nothing.
-Test MtRubberBandIsBoundedByThePull {
+construct MtRubberBandIsBoundedByThePull() extends Test {
     test {
         let banded = motionRubberBand(200.0, 800.0, 0.55)
         if banded < 200.0 && banded > 0.0 {
@@ -210,7 +210,7 @@ Test MtRubberBandIsBoundedByThePull {
 // The inverse recovers the pull, which is what lets a drag pick up a surface
 // that is already held past its edge without the content jumping under the
 // finger.
-Test MtRubberBandInverseRoundTrips {
+construct MtRubberBandInverseRoundTrips() extends Test {
     test {
         let banded = motionRubberBand(137.0, 800.0, 0.55)
         let recovered = motionRubberBandInverse(banded, 800.0, 0.55)
@@ -221,7 +221,7 @@ Test MtRubberBandInverseRoundTrips {
 
 // The curve is symmetric about zero: pulling past the top feels like pulling
 // past the bottom.
-Test MtRubberBandIsSymmetric {
+construct MtRubberBandIsSymmetric() extends Test {
     test {
         let up = motionRubberBandSigned(0.0 - 60.0, 800.0, 0.55)
         let down = motionRubberBandSigned(60.0, 800.0, 0.55)
@@ -234,14 +234,14 @@ Test MtRubberBandIsSymmetric {
 
 // A fling at 1000 points a second travels about 499.5 points before stopping.
 // This is the continuous form of the platform's per-millisecond decay rate.
-Test MtDecayProjectsAFling {
+construct MtDecayProjectsAFling() extends Test {
     test { return mtScaled(motionDecayProjection(1000.0, 0.998), 1) }
     expect { let e: Result<Int, TestFailure> = .Ok(4995); return e }
 }
 
 // A faster rate stops sooner, which is what a picker wants and a long list
 // does not.
-Test MtFastDecayStopsSooner {
+construct MtFastDecayStopsSooner() extends Test {
     test {
         let normal = motionDecayProjection(1000.0, motionDecayRateNormal())
         let fast = motionDecayProjection(1000.0, motionDecayRateFast())
@@ -255,7 +255,7 @@ Test MtFastDecayStopsSooner {
 
 // The projection is where the simulation actually ends up. If these disagreed,
 // a snapped list would pick its item from one number and land on another.
-Test MtDecayReachesItsProjection {
+construct MtDecayReachesItsProjection() extends Test {
     test {
         let projected = motionDecayProjection(1000.0, 0.998)
         let travelled = motionDecayOffset(1000.0, 0.998, 20.0)
@@ -265,7 +265,7 @@ Test MtDecayReachesItsProjection {
 }
 
 // Velocity decays toward nothing rather than reversing.
-Test MtDecayVelocityFallsTowardZero {
+construct MtDecayVelocityFallsTowardZero() extends Test {
     test {
         let early = motionDecayVelocity(1000.0, 0.998, 0.1)
         let late = motionDecayVelocity(1000.0, 0.998, 1.0)
@@ -279,14 +279,14 @@ Test MtDecayVelocityFallsTowardZero {
 
 // --- snapping --------------------------------------------------------------
 
-Test MtSnapPicksTheNearestItem {
+construct MtSnapPicksTheNearestItem() extends Test {
     test { return Int(motionSnapNearest(137.0, 50.0, 0.0)) }
     expect { let e: Result<Int, TestFailure> = .Ok(150); return e }
 }
 
 // A hard throw passes more items than a flick, because the snap is taken from
 // where the throw was GOING rather than from where the finger left.
-Test MtSnapFollowsTheThrowsStrength {
+construct MtSnapFollowsTheThrowsStrength() extends Test {
     test {
         let flick = motionSnapNearest(0.0 + motionDecayProjection(200.0, 0.998), 50.0, 0.0)
         let throw = motionSnapNearest(0.0 + motionDecayProjection(2000.0, 0.998), 50.0, 0.0)
@@ -299,7 +299,7 @@ Test MtSnapFollowsTheThrowsStrength {
 }
 
 // A paged surface moves by one, however hard it is thrown.
-Test MtPagingAdvancesOneStep {
+construct MtPagingAdvancesOneStep() extends Test {
     test { return Int(motionSnapNextPage(0.0, 900.0, 100.0, 0.0)) }
     expect { let e: Result<Int, TestFailure> = .Ok(100); return e }
 }

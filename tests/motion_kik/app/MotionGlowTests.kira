@@ -25,7 +25,7 @@ function mgRun(state: borrow mut MotionGlowState, seconds: Float) -> Float {
 // --- the fade --------------------------------------------------------------
 
 // A held press reaches full brightness in the fade-in time and not before.
-Test MgAPressReachesItsLevel {
+construct MgAPressReachesItsLevel() extends Test {
     test {
         var state = MotionGlowState {}
         motionGlowPress(state, 0.0, 0.0)
@@ -37,7 +37,7 @@ Test MgAPressReachesItsLevel {
 
 // It is most of the way there in half that time: the curve is eased OUT, so the
 // press is answered immediately rather than ramping in linearly.
-Test MgTheFadeInIsFrontLoaded {
+construct MgTheFadeInIsFrontLoaded() extends Test {
     test {
         var state = MotionGlowState {}
         motionGlowPress(state, 0.0, 0.0)
@@ -53,7 +53,7 @@ Test MgTheFadeInIsFrontLoaded {
 // Leaving takes longer than arriving. The two directions are not one motion
 // reversed, and this is the number that makes the light drain rather than
 // switch off.
-Test MgTheFadeOutIsSlowerThanTheFadeIn {
+construct MgTheFadeOutIsSlowerThanTheFadeIn() extends Test {
     test {
         if motionGlowFadeOut() > motionGlowFadeIn() * 1.5 {
             return 1
@@ -64,7 +64,7 @@ Test MgTheFadeOutIsSlowerThanTheFadeIn {
 }
 
 // Released, it goes out completely — and only after the fade-out time.
-Test MgAReleaseGoesDarkInItsOwnTime {
+construct MgAReleaseGoesDarkInItsOwnTime() extends Test {
     test {
         var state = MotionGlowState {}
         motionGlowPress(state, 0.0, 0.0)
@@ -85,7 +85,7 @@ Test MgAReleaseGoesDarkInItsOwnTime {
 
 // A tap too quick to reach full brightness fades from where it actually got to.
 // Snapping up to full first and then fading is the version that flickers.
-Test MgAQuickTapFadesFromWhereItReached {
+construct MgAQuickTapFadesFromWhereItReached() extends Test {
     test {
         var state = MotionGlowState {}
         motionGlowPress(state, 0.0, 0.0)
@@ -108,7 +108,7 @@ Test MgAQuickTapFadesFromWhereItReached {
 
 // Full strength at the centre, and straight down to half across the inner
 // half — a quarter of the way out is three quarters lit.
-Test MgTheCoreFallsStraightToHalf {
+construct MgTheCoreFallsStraightToHalf() extends Test {
     test {
         let centre = motionGlowFalloff(0.0)
         let quarter = motionGlowFalloff(motionGlowDiameter() * 0.125)
@@ -120,12 +120,12 @@ Test MgTheCoreFallsStraightToHalf {
     expect { let e: Result<Int, TestFailure> = .Ok(750); return e }
 }
 
-Test MgTheFalloffIsHalfWhereTheCoreEnds {
+construct MgTheFalloffIsHalfWhereTheCoreEnds() extends Test {
     test { return mtScaled(motionGlowFalloff(motionGlowDiameter() * 0.25), 3) }
     expect { let e: Result<Int, TestFailure> = .Ok(500); return e }
 }
 
-Test MgTheFalloffReachesNothingAtTheRim {
+construct MgTheFalloffReachesNothingAtTheRim() extends Test {
     test {
         let rim = motionGlowFalloff(motionGlowDiameter() * 0.5)
         let beyond = motionGlowFalloff(motionGlowDiameter())
@@ -135,7 +135,7 @@ Test MgTheFalloffReachesNothingAtTheRim {
 }
 
 // It never rises on the way out.
-Test MgTheFalloffOnlyFalls {
+construct MgTheFalloffOnlyFalls() extends Test {
     test {
         var previous = 2.0
         var step = 0
@@ -157,7 +157,7 @@ Test MgTheFalloffOnlyFalls {
 // The highlight is centred where the touch is, not in the middle of what was
 // touched, and it tracks with no easing of its own — a light that lagged the
 // finger would trail the thing causing it.
-Test MgTheLightIsCentredOnTheTouch {
+construct MgTheLightIsCentredOnTheTouch() extends Test {
     test {
         var state = MotionGlowState {}
         motionGlowPress(state, 40.0, 10.0)
@@ -172,7 +172,7 @@ Test MgTheLightIsCentredOnTheTouch {
     expect { let e: Result<Int, TestFailure> = .Ok(100); return e }
 }
 
-Test MgTheLightTracksTheFinger {
+construct MgTheLightTracksTheFinger() extends Test {
     test {
         var state = MotionGlowState {}
         motionGlowPress(state, 0.0, 0.0)
@@ -191,7 +191,7 @@ Test MgTheLightTracksTheFinger {
 // actually is, and it is why the response looks like it ramps and holds: the
 // fades overlap. One accumulating reservoir would get that silhouette but could
 // not put two lights in two places, which is what two fingers are.
-Test MgOverlappingTouchesAddUp {
+construct MgOverlappingTouchesAddUp() extends Test {
     test {
         var first = MotionGlowState {}
         motionGlowPress(first, 0.0, 0.0)
@@ -210,7 +210,7 @@ Test MgOverlappingTouchesAddUp {
 }
 
 // Two touches far apart light two places rather than one brighter one.
-Test MgTwoFingersLightTwoPlaces {
+construct MgTwoFingersLightTwoPlaces() extends Test {
     test {
         var left = MotionGlowState {}
         var right = MotionGlowState {}
@@ -230,7 +230,7 @@ Test MgTwoFingersLightTwoPlaces {
 }
 
 // An unlit element asks for no frames.
-Test MgADarkElementNeedsNoFrames {
+construct MgADarkElementNeedsNoFrames() extends Test {
     test {
         var state = MotionGlowState {}
         if motionGlowLit(state) {
@@ -245,7 +245,7 @@ Test MgADarkElementNeedsNoFrames {
 
 // Down is quick and mostly damped; up is slower and bouncy enough to overshoot.
 // One spring for both is the version that loses the elasticity.
-Test MgTheReleaseSpringIsBouncierThanThePress {
+construct MgTheReleaseSpringIsBouncierThanThePress() extends Test {
     test {
         let on = motionLiftOn(1.0)
         let off = motionLiftOff(1.0)
@@ -258,7 +258,7 @@ Test MgTheReleaseSpringIsBouncierThanThePress {
 }
 
 // The release spring actually passes its target — that is what bouncy means.
-Test MgTheReleaseSpringOvershoots {
+construct MgTheReleaseSpringOvershoots() extends Test {
     test {
         var state = motionSpringStart(motionLiftOff(100.0), 0.0, 0.0)
         var peak = 0.0
@@ -279,7 +279,7 @@ Test MgTheReleaseSpringOvershoots {
 }
 
 // A press lifts the element toward the finger rather than pushing it in.
-Test MgAPressLiftsRatherThanShrinks {
+construct MgAPressLiftsRatherThanShrinks() extends Test {
     test {
         let lift = motionPressLiftScale(100.0)
         if lift > 1.0 {

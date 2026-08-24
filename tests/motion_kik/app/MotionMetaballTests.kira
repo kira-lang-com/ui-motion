@@ -24,13 +24,13 @@ function mbMid(gap: Float) -> Float {
 // --- the smooth minimum ----------------------------------------------------
 
 // With no reach it is a plain union: the nearer surface, and nothing else.
-Test MbNoReachIsAPlainUnion {
+construct MbNoReachIsAPlainUnion() extends Test {
     test { return mtScaled(motionSmoothUnion(4.0, 9.0, 0.0), 3) }
     expect { let e: Result<Int, TestFailure> = .Ok(4000); return e }
 }
 
 // With reach, the merged field is BELOW both — that dip is the whole effect.
-Test MbTheMergedFieldDipsBelowBoth {
+construct MbTheMergedFieldDipsBelowBoth() extends Test {
     test {
         let merged = motionSmoothUnion(4.0, 6.0, 20.0)
         if merged < 4.0 {
@@ -43,7 +43,7 @@ Test MbTheMergedFieldDipsBelowBoth {
 
 // Far apart, the reach cannot bridge them and the answer is the plain minimum
 // again — which is why two shapes across a screen do not smear together.
-Test MbDistantShapesDoNotFuse {
+construct MbDistantShapesDoNotFuse() extends Test {
     test { return mtScaled(motionSmoothUnion(5.0, 400.0, 20.0), 3) }
     expect { let e: Result<Int, TestFailure> = .Ok(5000); return e }
 }
@@ -59,7 +59,7 @@ Test MbDistantShapesDoNotFuse {
 // the reference reach of 20 that is a gap under ten points — which is why a
 // morph brings the shapes to overlapping before the neck appears, rather than
 // stringing one across the screen.
-Test MbANeckFormsAcrossASmallGap {
+construct MbANeckFormsAcrossASmallGap() extends Test {
     test {
         let gap = 8.0
         let frame = MotionMetaballFrame { source: mbLeft(), target: mbRight(gap), blend: motionMetaballBlend() }
@@ -80,7 +80,7 @@ Test MbANeckFormsAcrossASmallGap {
 
 // Widen the gap and the neck thins and then breaks, which is what makes the
 // merge read as surface tension rather than as a drawn connector.
-Test MbTheNeckBreaksAsTheGapWidens {
+construct MbTheNeckBreaksAsTheGapWidens() extends Test {
     test {
         let near = MotionMetaballFrame { source: mbLeft(), target: mbRight(8.0), blend: motionMetaballBlend() }
         let far = MotionMetaballFrame { source: mbLeft(), target: mbRight(40.0), blend: motionMetaballBlend() }
@@ -96,7 +96,7 @@ Test MbTheNeckBreaksAsTheGapWidens {
 
 // The neck is thinnest at the waist: the field at the midpoint is closer to the
 // surface than the field deep inside either shape.
-Test MbTheNeckIsThinnestAtTheWaist {
+construct MbTheNeckIsThinnestAtTheWaist() extends Test {
     test {
         let gap = 24.0
         let frame = MotionMetaballFrame { source: mbLeft(), target: mbRight(gap), blend: motionMetaballBlend() }
@@ -114,7 +114,7 @@ Test MbTheNeckIsThinnestAtTheWaist {
 
 // At the ends there is nothing to fuse — one shape has not appeared and the
 // other has gone — so the reach is nothing, and it is greatest in the middle.
-Test MbTheReachPeaksInTheMiddle {
+construct MbTheReachPeaksInTheMiddle() extends Test {
     test {
         let start = motionMetaballReach(0.0)
         let mid = motionMetaballReach(0.5)
@@ -129,7 +129,7 @@ Test MbTheReachPeaksInTheMiddle {
 
 // At the start the frame IS the source, and at the end it IS the destination.
 // Anything else and the morph would begin or finish with a visible jump.
-Test MbTheMorphBeginsAndEndsOnItsShapes {
+construct MbTheMorphBeginsAndEndsOnItsShapes() extends Test {
     test {
         let from = MotionShape { x: 0.0, y: 0.0, width: 200.0, height: 120.0, radius: 24.0 }
         let to = MotionShape { x: 300.0, y: 40.0, width: 44.0, height: 44.0, radius: 22.0 }
@@ -148,7 +148,7 @@ Test MbTheMorphBeginsAndEndsOnItsShapes {
 // Halfway, BOTH shapes are real and separated — which is what gives the smooth
 // minimum something to bridge. A morph that interpolated one shape into the
 // other would have a single shape here and no neck could exist.
-Test MbHalfwayThereAreTwoRealShapes {
+construct MbHalfwayThereAreTwoRealShapes() extends Test {
     test {
         let from = MotionShape { x: 0.0, y: 0.0, width: 200.0, height: 120.0, radius: 24.0 }
         let to = MotionShape { x: 300.0, y: 40.0, width: 44.0, height: 44.0, radius: 22.0 }
@@ -163,7 +163,7 @@ Test MbHalfwayThereAreTwoRealShapes {
 
 // The source is gone by the end and the destination has not begun at the start,
 // so nothing is left behind and nothing appears early.
-Test MbTheSourceCollapsesAndTheTargetGrows {
+construct MbTheSourceCollapsesAndTheTargetGrows() extends Test {
     test {
         let from = MotionShape { x: 0.0, y: 0.0, width: 200.0, height: 120.0, radius: 24.0 }
         let to = MotionShape { x: 300.0, y: 40.0, width: 44.0, height: 44.0, radius: 22.0 }
@@ -178,7 +178,7 @@ Test MbTheSourceCollapsesAndTheTargetGrows {
 }
 
 // A morph run to completion settles, and lands on its destination.
-Test MbAMorphCompletes {
+construct MbAMorphCompletes() extends Test {
     test {
         var state = MotionMetaballState {}
         let from = MotionShape { x: 0.0, y: 0.0, width: 200.0, height: 120.0, radius: 24.0 }
