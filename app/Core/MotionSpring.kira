@@ -74,8 +74,8 @@ function motionSpringFromCoefficients(stiffness: Float, damping: Float, target: 
     let k = max(stiffness, 0.0001)
     let omega = sqrt(k)
     return MotionSpring {
-        response: 6.283185307179586 / omega
-        damping: damping / (2.0 * omega)
+        response: 6.283185307179586 / omega,
+        damping: damping / (2.0 * omega),
         target: target
     }
 }
@@ -87,9 +87,9 @@ function motionSpringFromCoefficients(stiffness: Float, damping: Float, target: 
 // makes a release continue the gesture rather than restart from still.
 function motionSpringStart(spring: MotionSpring, from: Float, velocity: Float) -> MotionSpringState {
     return MotionSpringState {
-        spring: spring
-        origin: from
-        velocity: velocity
+        spring: spring,
+        origin: from,
+        velocity: velocity,
         elapsed: 0.0
     }
 }
@@ -148,7 +148,7 @@ function motionSpringSample(state: borrow MotionSpringState, t: Float) -> Motion
     let e1 = exp(r1 * time)
     let e2 = exp(r2 * time)
     return MotionSpringSample {
-        value: spring.target + c1 * e1 + c2 * e2
+        value: spring.target + c1 * e1 + c2 * e2,
         velocity: c1 * r1 * e1 + c2 * r2 * e2
     }
 }
@@ -194,8 +194,8 @@ function motionSpringEpsilon() -> Float {
 function motionSpringRetarget(state: borrow mut MotionSpringState, target: Float) {
     let now = motionSpringSample(state, state.elapsed)
     state.spring = MotionSpring {
-        response: state.spring.response
-        damping: state.spring.damping
+        response: state.spring.response,
+        damping: state.spring.damping,
         target: target
     }
     state.origin = now.value

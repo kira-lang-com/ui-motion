@@ -106,8 +106,8 @@ function motionPressLiftScale(extent: Float) -> Float {
 // overshoots noticeably. Negative bounce is the overdamped side.
 function motionSpringFromBounce(duration: Float, bounce: Float, target: Float) -> MotionSpring {
     return MotionSpring {
-        response: duration
-        damping: 1.0 - bounce
+        response: duration,
+        damping: 1.0 - bounce,
         target: target
     }
 }
@@ -127,10 +127,10 @@ function motionSpringFromBounce(duration: Float, bounce: Float, target: Float) -
 // thing came from with it — except where the movement itself is the effect.
 function motionCurveReduced(spring: borrow MotionSpring) -> MotionSpring {
     return MotionSpring {
-        response: min(spring.response, 0.25)
+        response: min(spring.response, 0.25),
         // Critical damping: the fastest approach with no overshoot, which is
         // exactly "disable any elastic properties" said in numbers.
-        damping: max(spring.damping, 1.0)
+        damping: max(spring.damping, 1.0),
         target: spring.target
     }
 }

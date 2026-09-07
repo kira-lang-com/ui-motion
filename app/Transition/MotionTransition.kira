@@ -93,8 +93,8 @@ function motionAppearanceFor(amount: Float) -> MotionAppearance {
         // Opacity arrives first and leaves last, so the element is legible for
         // most of the transition rather than being a ghost through the middle
         // of it.
-        opacity: motionEase(.EaseOut, min(t * 1.4, 1.0))
-        scale: motionScaleFrom() + (1.0 - motionScaleFrom()) * t
+        opacity: motionEase(.EaseOut, min(t * 1.4, 1.0)),
+        scale: motionScaleFrom() + (1.0 - motionScaleFrom()) * t,
         // Lensing lags the opacity: the material condenses after the shape is
         // already there.
         lensing: motionEase(.EaseIn, t)

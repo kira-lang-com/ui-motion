@@ -274,11 +274,11 @@ function motionDeformationFor(state: borrow MotionPullState, press: Float) -> Mo
         scaleY = across
     }
     return MotionDeformation {
-        x: state.x
-        y: state.y
-        scaleX: max(scaleX, 0.5)
-        scaleY: max(scaleY, 0.5)
-        pressScale: 1.0 + (motionPressLiftFor(state.reach) - 1.0) * press
+        x: state.x,
+        y: state.y,
+        scaleX: max(scaleX, 0.5),
+        scaleY: max(scaleY, 0.5),
+        pressScale: 1.0 + (motionPressLiftFor(state.reach) - 1.0) * press,
         intensity: min(stretch / motionStretchLimit() + press * 0.5, 1.0)
     }
 }

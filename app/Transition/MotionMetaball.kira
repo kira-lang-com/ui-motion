@@ -131,9 +131,9 @@ function motionMetaballFrameAt(from: borrow MotionShape, to: borrow MotionShape,
     return MotionMetaballFrame {
         // The source travels to the destination's centre while collapsing to
         // nothing, so it is gone exactly when the morph completes.
-        source: motionShapeBetween(from, motionShapeCollapsed(to, from), t)
+        source: motionShapeBetween(from, motionShapeCollapsed(to, from), t),
         // The destination grows from the source's centre to its own full size.
-        target: motionShapeBetween(motionShapeCollapsed(from, to), to, t)
+        target: motionShapeBetween(motionShapeCollapsed(from, to), to, t),
         blend: motionMetaballReach(t)
     }
 }
@@ -149,20 +149,20 @@ function motionShapeCollapsed(at: borrow MotionShape, like: borrow MotionShape) 
     // the field well behaved.
     let seed = 2.0
     return MotionShape {
-        x: cx - seed * 0.5
-        y: cy - seed * 0.5
-        width: seed
-        height: seed
+        x: cx - seed * 0.5,
+        y: cy - seed * 0.5,
+        width: seed,
+        height: seed,
         radius: seed * 0.5
     }
 }
 
 function motionShapeBetween(from: borrow MotionShape, to: borrow MotionShape, t: Float) -> MotionShape {
     return MotionShape {
-        x: from.x + (to.x - from.x) * t
-        y: from.y + (to.y - from.y) * t
-        width: from.width + (to.width - from.width) * t
-        height: from.height + (to.height - from.height) * t
+        x: from.x + (to.x - from.x) * t,
+        y: from.y + (to.y - from.y) * t,
+        width: from.width + (to.width - from.width) * t,
+        height: from.height + (to.height - from.height) * t,
         radius: from.radius + (to.radius - from.radius) * t
     }
 }
